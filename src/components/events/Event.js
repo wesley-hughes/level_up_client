@@ -1,11 +1,11 @@
+import { Link } from "react-router-dom";
 
 export const Event = (event) => {
 
   return (
     <>
       <section className="event">
-        <h3 className="event__description">Description</h3>
-        <div>{event.description}</div>
+      <h3><Link to={`/events/${event.id}/edit`}>Description {event.description}</Link></h3>
         <footer className="event__footer event__footer--detail">
           <div className="footerItem">Game: {event.game.title}</div>
           <div className="footerItem">Date: {event.date}</div>
