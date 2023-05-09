@@ -61,3 +61,12 @@ export const updateGame = (updatedGame, gameId) => {
   })
   .catch(error => console.log(error));
 };
+export const deleteGame = (id) => {
+  return fetch(`http://localhost:8000/games/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Token ${getToken()}`
+    }
+  }
+  )
+}

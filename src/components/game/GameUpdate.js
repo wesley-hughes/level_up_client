@@ -30,7 +30,7 @@ export const GameUpdate = () => {
         game_type: parseInt(res?.game_type?.id)
       });
     });
-  }, [gameId]);
+  }, [gameId, currentGame]);
 
   useEffect(() => {
     getAllGametypes().then((data) => setGametypes(data));

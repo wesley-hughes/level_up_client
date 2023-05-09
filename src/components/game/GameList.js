@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { getAllGames } from "../../managers/GameManager.js";
+import { deleteGame, getAllGames } from "../../managers/GameManager.js";
 import { Link, useNavigate } from "react-router-dom";
 
 export const GameList = (props) => {
   const [games, setGames] = useState([]);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAllGames().then((data) => setGames(data));
   }, []);
 
+  const deleteGameEvent = (game) => {
+    deleteGame(game.id).then(() => {
+      getAllGames().then((data) => setGames(data));
+    });
+  };
+  
   return (
     <article className="games">
       <button
@@ -22,10 +28,11 @@ export const GameList = (props) => {
       </button>
       {games.map((game) => {
         return (
-            
           <section key={`game--${game.id}`} className="game">
             <div className="game__title">
-            <h3><Link to={`/games/${game.id}/edit`}>{game.title}</Link></h3>
+              <h3>
+                <Link to={`/games/${game.id}/edit`}>{game.title}</Link>
+              </h3>
               by {game.maker}
             </div>
             <div className="game__players">
@@ -34,6 +41,7 @@ export const GameList = (props) => {
             <div className="game__skillLevel">
               Skill level is {game.skill_level}
             </div>
+            <button onClick={() => deleteGameEvent(game)}>Delete</button>
           </section>
         );
       })}

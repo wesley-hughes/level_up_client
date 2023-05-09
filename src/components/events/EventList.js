@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react";
-import { getAllEvents } from "../../managers/EventManager";
-import { Event } from "./Event";
+import {
+  deleteEvent,
+  getAllEvents,
+  joinEvent,
+  leaveEvent,
+} from "../../managers/EventManager";
+
 import { getAllGames } from "../../managers/GameManager";
 import { getToken } from "../../utils/getToken";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const EventList = () => {
   const [events, setEvents] = useState([]);
   const [games, setGames] = useState([]);
   const [gameId, setGameId] = useState(0);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAllEvents().then((res) => setEvents(res));
@@ -20,8 +25,8 @@ export const EventList = () => {
   const filterEventsByGame = (game) => {
     fetch(`http://localhost:8000/events?game=${game}`, {
       headers: {
-        Authorization: `Token ${getToken()}`
-      }
+        Authorization: `Token ${getToken()}`,
+      },
     })
       .then((response) => {
         return response.json();
@@ -33,13 +38,19 @@ export const EventList = () => {
   };
   useEffect(() => {
     if (gameId !== 0) {
-      filterEventsByGame(gameId)
+      filterEventsByGame(gameId);
     }
   }, [gameId]);
 
+  const deleteEventHandler = (event) => {
+    deleteEvent(event.id).then(() => {
+      getAllEvents().then((data) => setEvents(data));
+    });
+  };
+
   return (
     <>
-         <button
+      <button
         className="btn btn-2 btn-sep icon-create"
         onClick={() => {
           navigate({ pathname: "/events/new" });
@@ -54,7 +65,39 @@ export const EventList = () => {
             <option value={game.id}>{game.title}</option>
           ))}
         </select>
-        {events.map((event) => Event(event))}
+        {events.map((event) => {
+          return (
+            <section className="event">
+              <h3>
+                <Link to={`/events/${event.id}/edit`}>
+                  Description {event.description}
+                </Link>
+              </h3>
+              <footer className="event__footer event__footer--detail">
+                <div className="footerItem">Game: {event.game.title}</div>
+                <div className="footerItem">Date: {event.date}</div>
+                <div className="footerItem">Time: {event.time}</div>
+                <div className="footerItem">
+                  Organizer: {event.organizer.full_name}
+                </div>
+                <div className="footerItem">
+                  Attendees:{" "}
+                  {event.attendees.map((attendee) => (
+                    <div>{attendee.full_name}</div>
+                  ))}
+                </div>
+                <button onClick={() => deleteEventHandler(event)}>
+                  Delete
+                </button>
+                {event.joined === true ? (
+                  <button onClick={() => leaveEvent(event.id)}>Leave</button>
+                ) : (
+                  <button onClick={() => joinEvent(event.id)}>Join</button>
+                )}
+              </footer>
+            </section>
+          );
+        })}
       </article>
     </>
   );

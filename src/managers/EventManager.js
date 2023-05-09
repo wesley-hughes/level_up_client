@@ -46,3 +46,32 @@ export const getAllEvents = () => {
     })
     .catch(error => console.log(error));
   };
+  export const deleteEvent = (id) => {
+    return fetch(`http://localhost:8000/events/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Token ${getToken()}`
+      }
+    }
+    )
+  }
+  export const leaveEvent = (eventId) => {
+    return fetch(`http://localhost:8000/events/${eventId}/leave`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Token ${getToken()}`
+      }
+    }
+    )
+  }
+  export const joinEvent = (eventId) => {
+    return fetch(`http://localhost:8000/events/${eventId}/signup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${getToken()}`
+      },
+      body: JSON.stringify()
+    })
+      .then(res => res.json())
+  }
