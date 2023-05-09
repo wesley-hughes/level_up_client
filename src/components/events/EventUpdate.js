@@ -33,7 +33,7 @@ export const EventUpdate = () => {
         game: parseInt(res?.game?.id)
       });
     });
-  }, [eventId]);
+  }, [eventId, currentEvent]);
 
   useEffect(() => {
     getAllGames().then((data) => setGames(data));
