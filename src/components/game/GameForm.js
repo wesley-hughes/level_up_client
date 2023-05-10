@@ -32,6 +32,9 @@ export const GameForm = () => {
             }
         )
     }
+    const changeGameState = (event) => {
+
+    }
 
     return (
         <form className="gameForm">
